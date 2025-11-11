@@ -198,24 +198,24 @@ _CRTIMP int __cdecl ___mb_cur_max_func(void);
   _CRTIMP void __cdecl _get_environ(char ***);
   _CRTIMP void __cdecl _get_wenviron(wchar_t ***);
 
-  static __inline char **__get_environ_ptr(void) {
-    char **__ptr;
+  static __inline char ***__get_environ_ptr(void) {
+    static char **__ptr = NULL;
     _get_environ(&__ptr);
-    return __ptr;
+    return &__ptr;
   }
 
-  static __inline wchar_t **__get_wenviron_ptr(void) {
-    wchar_t **__ptr;
+  static __inline wchar_t ***__get_wenviron_ptr(void) {
+    static wchar_t **__ptr = NULL;
     _get_wenviron(&__ptr);
-    return __ptr;
+    return &__ptr;
   }
 
 #ifndef _environ
-#define _environ (__get_environ_ptr())
+#define _environ (*__get_environ_ptr())
 #endif
 
 #ifndef _wenviron
-#define _wenviron (__get_wenviron_ptr())
+#define _wenviron (*__get_wenviron_ptr())
 #endif
 #else /* UCRT or non-ARM/ARM64 msvcrt */
   _CRTIMP char ***__cdecl __p__environ(void);
